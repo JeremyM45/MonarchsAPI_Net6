@@ -12,12 +12,10 @@ namespace MonarchsAPI_Net6.Services.UserServices
         {
             _dbContext = context;
         }
-
+        
         public async Task<List<User>> GetAllUsers()
         {
-            List<User> users = await _dbContext.Users.ToListAsync();
-            if (!users.Any()) { return null; }
-            return users;
+            return await _dbContext.Users.ToListAsync();
         }
 
         public async Task<User> AddUser(User user)
