@@ -11,7 +11,7 @@ using MonarchsAPI_Net6.Data;
 namespace MonarchsAPI_Net6.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230502032911_InitalMigration")]
+    [Migration("20230502072656_InitalMigration")]
     partial class InitalMigration
     {
         /// <inheritdoc />
@@ -102,7 +102,12 @@ namespace MonarchsAPI_Net6.Migrations
                     b.Property<float>("RatingValue")
                         .HasColumnType("real");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Ratings");
                 });
@@ -130,6 +135,22 @@ namespace MonarchsAPI_Net6.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MonarchsAPI_Net6.Models.Rating", b =>
+                {
+                    b.HasOne("MonarchsAPI_Net6.Models.User", "User")
+                        .WithMany("Ratings")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MonarchsAPI_Net6.Models.User", b =>
+                {
+                    b.Navigation("Ratings");
                 });
 #pragma warning restore 612, 618
         }
