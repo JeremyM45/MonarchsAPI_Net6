@@ -26,5 +26,13 @@ namespace MonarchsAPI_Net6.Controllers
             if(users == null) { return NotFound(); }
             return Ok(users);
         }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<User>> GetUserById(int id)
+        {
+            User user = await _userServices.GetUserById(id);
+            if(user == null) { return NotFound(); }
+            return Ok(user);
+        }
     }
 }
