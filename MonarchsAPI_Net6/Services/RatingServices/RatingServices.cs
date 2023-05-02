@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 
 namespace MonarchsAPI_Net6.Services.RatingServices
 {
-    public class RatingService : IRatingService
+    public class RatingServices : IRatingServices
     {
         private readonly DataContext _dbContext;
-        public RatingService(DataContext context)
+        public RatingServices(DataContext context)
         {
             _dbContext = context;               
         }
@@ -81,11 +81,5 @@ namespace MonarchsAPI_Net6.Services.RatingServices
                 return false;
             }
         }
-
-        
-
-        
-
-        
     }
 }

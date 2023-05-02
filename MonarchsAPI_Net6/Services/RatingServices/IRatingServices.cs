@@ -4,7 +4,7 @@ using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.RatingServices
 {
-    public interface IRatingService
+    public interface IRatingServices
     {
         Task<List<Rating>> GetAll();
         Task<Rating?> GetById(int id);

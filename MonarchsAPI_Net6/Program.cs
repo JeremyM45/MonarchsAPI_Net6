@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.Services.RatingServices;
 using MonarchsAPI_Net6.Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserServices, UserServices>();
+builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
