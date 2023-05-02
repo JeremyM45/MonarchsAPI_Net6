@@ -62,5 +62,16 @@ namespace MonarchsAPI_Net6.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPut]
+        public async Task<ActionResult> EditUser(User user)
+        {
+            if(await _userServices.EditUser(user))
+            {
+                return Ok(await _userServices.GetUserById(user.Id));
+            }
+
+            return BadRequest();
+        }
     }
 }

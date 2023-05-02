@@ -55,7 +55,15 @@ namespace MonarchsAPI_Net6.Services.UserServices
 
         public async Task<bool> EditUser(User user)
         {
-            throw new NotImplementedException();
+            User? userToEdit = await _dbContext.Users.FindAsync(user.Id);
+            if (userToEdit == null) { return false; }
+            
+            userToEdit.UserName = user.UserName;
+            userToEdit.UserEmail = user.UserEmail;
+            userToEdit.Password = user.Password;
+
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }
