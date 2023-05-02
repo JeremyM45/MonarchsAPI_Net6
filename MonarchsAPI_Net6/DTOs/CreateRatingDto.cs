@@ -4,5 +4,6 @@
     {
         public float ratingValue { get; set; }
         public string comment { get; set; } = string.Empty;
+        public int UserId { get; set; }
     }
 }

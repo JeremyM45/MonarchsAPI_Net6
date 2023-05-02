@@ -15,7 +15,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
         
         public async Task<List<User>> GetAllUsers()
         {
-            return await _dbContext.Users.ToListAsync();
+            return await _dbContext.Users.Include(u => u.Ratings).ToListAsync();
         }
 
         public async Task<User> GetUserById(int id)

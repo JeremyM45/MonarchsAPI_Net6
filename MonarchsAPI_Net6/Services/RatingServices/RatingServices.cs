@@ -28,7 +28,8 @@ namespace MonarchsAPI_Net6.Services.RatingServices
 
         public async Task<bool> AddRating(Rating rating)
         {
-            
+            User user = await _dbContext.Users.FindAsync(rating.UserId);
+            rating.User = user;
             try
             {
                 await _dbContext.AddAsync(rating);
