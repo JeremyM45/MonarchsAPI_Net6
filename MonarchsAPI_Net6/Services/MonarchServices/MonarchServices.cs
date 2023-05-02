@@ -20,5 +20,17 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
                 .Include(m => m.Countries)
                 .ToListAsync();
         }
+
+        public async Task<Monarch> GetById(int id)
+        {
+            Monarch? monarch = await _dbContext.Monarchs
+                .Where(m => m.Id == id)
+                .Include(m => m.Ratings)
+                .Include(m => m.Dynasty)
+                .Include(m => m.Countries)
+                .FirstOrDefaultAsync();
+            if(monarch == null) { return null; }
+            return monarch;
+        }
     }
 }

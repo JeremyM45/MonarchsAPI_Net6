@@ -21,5 +21,12 @@ namespace MonarchsAPI_Net6.Controllers
             List<Monarch> monarchs = await _moarchServices.GetAll();
             return Ok(monarchs);
         }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Monarch>> GetMonarchById(int id)
+        {
+            Monarch monarch = await _moarchServices.GetById(id);
+            if(monarch == null) { return NotFound();  }
+            return Ok(monarch);
+        }
     }
 }
