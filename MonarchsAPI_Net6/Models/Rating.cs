@@ -8,6 +8,8 @@ namespace MonarchsAPI_Net6.Models
         public float RatingValue { get; set; }
         public string Comment { get; set; } = string.Empty;
         public int UserId { get; set; }
+        public int MonarchId { get; set; }
         [JsonIgnore] public User User { get; set; }
+        [JsonIgnore] public Monarch Monarch { get; set; }
     }
 }

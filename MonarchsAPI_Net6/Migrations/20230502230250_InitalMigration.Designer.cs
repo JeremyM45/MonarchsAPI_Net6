@@ -11,7 +11,7 @@ using MonarchsAPI_Net6.Data;
 namespace MonarchsAPI_Net6.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230502072656_InitalMigration")]
+    [Migration("20230502230250_InitalMigration")]
     partial class InitalMigration
     {
         /// <inheritdoc />
@@ -23,6 +23,21 @@ namespace MonarchsAPI_Net6.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("CountryMonarch", b =>
+                {
+                    b.Property<int>("CountriesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MonarchsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CountriesId", "MonarchsId");
+
+                    b.HasIndex("MonarchsId");
+
+                    b.ToTable("CountryMonarch");
+                });
 
             modelBuilder.Entity("MonarchsAPI_Net6.Models.Country", b =>
                 {
@@ -70,6 +85,9 @@ namespace MonarchsAPI_Net6.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("DynastyId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -83,6 +101,8 @@ namespace MonarchsAPI_Net6.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DynastyId");
 
                     b.ToTable("Monarchs");
                 });
@@ -99,6 +119,9 @@ namespace MonarchsAPI_Net6.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MonarchId")
+                        .HasColumnType("int");
+
                     b.Property<float>("RatingValue")
                         .HasColumnType("real");
 
@@ -106,6 +129,8 @@ namespace MonarchsAPI_Net6.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MonarchId");
 
                     b.HasIndex("UserId");
 
@@ -137,15 +162,59 @@ namespace MonarchsAPI_Net6.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CountryMonarch", b =>
+                {
+                    b.HasOne("MonarchsAPI_Net6.Models.Country", null)
+                        .WithMany()
+                        .HasForeignKey("CountriesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MonarchsAPI_Net6.Models.Monarch", null)
+                        .WithMany()
+                        .HasForeignKey("MonarchsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MonarchsAPI_Net6.Models.Monarch", b =>
+                {
+                    b.HasOne("MonarchsAPI_Net6.Models.Dynasty", "Dynasty")
+                        .WithMany("Monarchs")
+                        .HasForeignKey("DynastyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Dynasty");
+                });
+
             modelBuilder.Entity("MonarchsAPI_Net6.Models.Rating", b =>
                 {
+                    b.HasOne("MonarchsAPI_Net6.Models.Monarch", "Monarch")
+                        .WithMany("Ratings")
+                        .HasForeignKey("MonarchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MonarchsAPI_Net6.Models.User", "User")
                         .WithMany("Ratings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Monarch");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MonarchsAPI_Net6.Models.Dynasty", b =>
+                {
+                    b.Navigation("Monarchs");
+                });
+
+            modelBuilder.Entity("MonarchsAPI_Net6.Models.Monarch", b =>
+                {
+                    b.Navigation("Ratings");
                 });
 
             modelBuilder.Entity("MonarchsAPI_Net6.Models.User", b =>

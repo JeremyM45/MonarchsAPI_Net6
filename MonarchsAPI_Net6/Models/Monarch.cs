@@ -7,5 +7,9 @@
         public string Description { get; set; } = string.Empty;
         public string WikiLink { get; set; } = string.Empty;
         public string Reign { get; set; } = string.Empty;
+        public int DynastyId { get; set; }
+        public List<Rating> Ratings { get; set; }
+        public Dynasty Dynasty { get; set; }
+        public List<Country> Countries { get; set; }
     }
 }
