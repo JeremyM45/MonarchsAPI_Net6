@@ -41,12 +41,19 @@ namespace MonarchsAPI_Net6.Services.UserServices
             }
         }
 
-        public async Task<List<User>> DeleteUser(int id)
+        public async Task<bool> DeleteUser(int id)
         {
-            throw new NotImplementedException();
+            User? userToRemove = await _dbContext.Users.FindAsync(id);
+            if(userToRemove == null)
+            {
+                return false;
+            }
+            _dbContext.Users.Remove(userToRemove);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<User> EditUser(User user)
+        public async Task<bool> EditUser(User user)
         {
             throw new NotImplementedException();
         }

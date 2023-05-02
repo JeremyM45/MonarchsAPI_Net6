@@ -50,8 +50,17 @@ namespace MonarchsAPI_Net6.Controllers
             {
                 return CreatedAtAction(nameof(AddUser), newUser);
             }
+            return BadRequest();   
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(int id)
+        {
+            if(await _userServices.DeleteUser(id))
+            {
+                return NoContent();
+            }
             return BadRequest();
-            
         }
     }
 }
