@@ -25,9 +25,20 @@ namespace MonarchsAPI_Net6.Services.UserServices
             return user;
         }
 
-        public async Task<User> AddUser(User user)
+        public async Task<bool> AddUser(User user)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                await _dbContext.Users.AddAsync(user);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("Error: Could Not Add User");
+            }
         }
 
         public async Task<List<User>> DeleteUser(int id)

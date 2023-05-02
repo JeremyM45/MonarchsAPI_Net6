@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.DTOs;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.UserServices;
 
@@ -33,6 +34,24 @@ namespace MonarchsAPI_Net6.Controllers
             User user = await _userServices.GetUserById(id);
             if(user == null) { return NotFound(); }
             return Ok(user);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddUser(CreateUserDto request)
+        {
+            User newUser = new User
+            {
+                UserName = request.UserName,
+                UserEmail = request.Email,
+                Password = request.Password
+            };
+
+            if(await _userServices.AddUser(newUser))
+            {
+                return CreatedAtAction(nameof(AddUser), newUser);
+            }
+            return BadRequest();
+            
         }
     }
 }
