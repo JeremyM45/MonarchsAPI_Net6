@@ -44,5 +44,26 @@ namespace MonarchsAPI_Net6.Controllers
             }
             return BadRequest();
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteRating(int id)
+        {
+            if (await _ratingServices.DeleteRating(id))
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> EditUser(EditRatingDto ratingDto)
+        {
+            if (await _ratingServices.EditRating(ratingDto))
+            {
+                return Ok();
+            }
+
+            return BadRequest();
+        }
     }
 }

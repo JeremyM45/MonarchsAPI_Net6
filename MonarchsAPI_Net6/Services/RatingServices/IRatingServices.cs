@@ -9,7 +9,7 @@ namespace MonarchsAPI_Net6.Services.RatingServices
         Task<List<Rating>> GetAll();
         Task<Rating?> GetById(int id);
         Task<bool> AddRating(Rating rating);
-        Task<Rating?> EditRating(Rating rating);
+        Task<bool> EditRating(EditRatingDto ratingDto);
         Task<bool> DeleteRating(int id);
     }
 }

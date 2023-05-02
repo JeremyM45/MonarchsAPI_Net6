@@ -43,24 +43,24 @@ namespace MonarchsAPI_Net6.Services.RatingServices
             
         }
 
-        public async Task<Rating?> EditRating(Rating EditedRating)
+        public async Task<bool> EditRating(EditRatingDto ratingDto)
         {
-            Rating? ratingToEdit = await _dbContext.Ratings.Where(r => r.Id == EditedRating.Id).FirstOrDefaultAsync();
+            Rating? ratingToEdit = await _dbContext.Ratings.Where(r => r.Id == ratingDto.Id).FirstOrDefaultAsync();
             if(ratingToEdit != null) 
             {
-                ratingToEdit.RatingValue = EditedRating.RatingValue;
-                ratingToEdit.Comment = EditedRating.Comment;
+                ratingToEdit.RatingValue = ratingDto.RatingValue;
+                ratingToEdit.Comment = ratingDto.Comment;
                 try
                 {
                     await _dbContext.SaveChangesAsync();
-                    return ratingToEdit;
+                    return true;
                 }
                 catch
                 {
-                    return null;
+                    return false;
                 }
             }
-            return null;
+            return false;
         }
 
         public async Task<bool> DeleteRating(int id)
