@@ -26,16 +26,12 @@ namespace MonarchsAPI_Net6.Services.RatingServices
             return rating ?? null;
         }
 
-        public async Task<bool> AddRating(CreateRatingDto ratingDto)
+        public async Task<bool> AddRating(Rating rating)
         {
-            Rating newRating = new Rating
-            {
-                RatingValue = ratingDto.ratingValue,
-                Comment = ratingDto.comment
-            };
+            
             try
             {
-                await _dbContext.AddAsync(newRating);
+                await _dbContext.AddAsync(rating);
                 await _dbContext.SaveChangesAsync();
                 return true;
             } 
