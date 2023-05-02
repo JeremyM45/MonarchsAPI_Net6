@@ -18,6 +18,13 @@ namespace MonarchsAPI_Net6.Services.UserServices
             return await _dbContext.Users.ToListAsync();
         }
 
+        public async Task<User> GetUserById(int id)
+        {
+            User? user = await _dbContext.Users.FindAsync(id);
+            if (user == null) { return null; }
+            return user;
+        }
+
         public async Task<User> AddUser(User user)
         {
             throw new NotImplementedException();
@@ -29,13 +36,6 @@ namespace MonarchsAPI_Net6.Services.UserServices
         }
 
         public async Task<User> EditUser(User user)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-
-        public async Task<User> GetUserById(int id)
         {
             throw new NotImplementedException();
         }
