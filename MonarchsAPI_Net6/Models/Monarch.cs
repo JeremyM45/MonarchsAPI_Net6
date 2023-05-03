@@ -8,8 +8,8 @@
         public string WikiLink { get; set; } = string.Empty;
         public string Reign { get; set; } = string.Empty;
         public int DynastyId { get; set; }
-        public List<Rating> Ratings { get; set; }
+        public List<Rating> Ratings { get; set; } = new List<Rating>();
         public Dynasty Dynasty { get; set; }
-        public List<Country> Countries { get; set; }
+        public List<Country> Countries { get; set; } = new List<Country>();
     }
 }
