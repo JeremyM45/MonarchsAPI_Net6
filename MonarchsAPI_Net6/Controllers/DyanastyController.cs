@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MonarchsAPI_Net6.DTOs;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.DynastyServices;
 
@@ -16,9 +17,9 @@ namespace MonarchsAPI_Net6.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Dynasty>>> GetAllDynasties()
+        public async Task<ActionResult<List<DynastyWithMonarchsDto>>> GetAllDynasties()
         {
-            List<Dynasty> dynasties = await _dynastyServices.GetAll();
+            List<DynastyWithMonarchsDto> dynasties = await _dynastyServices.GetAll();
             return Ok(dynasties);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.DTOs;
 using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.DynastyServices
@@ -12,9 +13,21 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
         {
             _dataContext = context;
         }
-        public async Task<List<Dynasty>> GetAll()
+        public async Task<List<DynastyWithMonarchsDto>> GetAll()
         {
-            return await _dataContext.Dynasties.ToListAsync();
+            List<Dynasty> dynasties = await _dataContext.Dynasties.Include(d => d.Monarchs).ThenInclude(m => m.Countries).ToListAsync();
+            List<DynastyWithMonarchsDto> dynastyDtos = new List<DynastyWithMonarchsDto>();
+            foreach(Dynasty dynasty in dynasties) 
+            {
+                DynastyWithMonarchsDto newDyanstyDto = new DynastyWithMonarchsDto
+                {
+                    Id = dynasty.Id,
+                    Name = dynasty.Name,
+                    Monarchs = dynasty.Monarchs,
+                };
+                dynastyDtos.Add(newDyanstyDto);
+            }
+            return dynastyDtos;
         }
     }
 }
