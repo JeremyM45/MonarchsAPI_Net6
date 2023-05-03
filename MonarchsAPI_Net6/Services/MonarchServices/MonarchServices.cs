@@ -34,6 +34,18 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
             return monarch;
         }
 
+        public async Task<Monarch> GetByName(string name)
+        {
+            Monarch? monarch = await _dbContext.Monarchs
+                .Where(m => m.Name == name)
+                .Include(m => m.Ratings)
+                .Include(m => m.Dynasty)
+                .Include(m => m.Countries)
+                .FirstOrDefaultAsync();
+            if (monarch == null) { return null; }
+            return monarch;
+        }
+
         public async Task<bool> AddMonarch(CreateMonarchDto newMonarchDto)
         {
             Monarch newMonarch = new Monarch
@@ -67,5 +79,7 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
                 throw ex;
             }
         }
+
+        
     }
 }

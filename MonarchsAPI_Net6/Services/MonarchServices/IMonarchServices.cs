@@ -7,6 +7,7 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
     {
         Task<List<Monarch>> GetAll();
         Task<Monarch> GetById(int id);
+        Task<Monarch> GetByName(string name);
         Task<bool> AddMonarch(CreateMonarchDto newMonarchDto);
     }
 }

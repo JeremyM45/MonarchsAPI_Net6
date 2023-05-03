@@ -35,10 +35,9 @@ namespace MonarchsAPI_Net6.Controllers
         {
             if(await _moarchServices.AddMonarch(newMonarchDto))
             {
-                return CreatedAtAction(nameof(AddMonarch), await _moarchServices.GetAll());
+                return CreatedAtAction(nameof(AddMonarch), await _moarchServices.GetByName(newMonarchDto.Name));
             }
             return BadRequest();
-
         }
     }
 }
