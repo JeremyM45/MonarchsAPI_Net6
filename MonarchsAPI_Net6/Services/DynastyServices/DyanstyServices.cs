@@ -15,7 +15,10 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
         }
         public async Task<List<DynastyWithMonarchsDto>> GetAll()
         {
-            List<Dynasty> dynasties = await _dataContext.Dynasties.Include(d => d.Monarchs).ThenInclude(m => m.Countries).ToListAsync();
+            List<Dynasty> dynasties = await _dataContext.Dynasties
+                .Include(d => d.Monarchs).ThenInclude(m => m.Countries)
+                .Include(c => c.Monarchs).ThenInclude(m => m.Ratings)
+                .ToListAsync();
             List<DynastyWithMonarchsDto> dynastyDtos = new List<DynastyWithMonarchsDto>();
             foreach(Dynasty dynasty in dynasties) 
             {

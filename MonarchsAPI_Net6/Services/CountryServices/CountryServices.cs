@@ -15,7 +15,10 @@ namespace MonarchsAPI_Net6.Services.CountryServices
 
         public async Task<List<CountryWithMonarchsDto>> GetAll()
         {
-            List<Country> countries = await _dataContext.Countries.Include(c => c.Monarchs).ThenInclude(m => m.Dynasty).ToListAsync();
+            List<Country> countries = await _dataContext.Countries
+                .Include(c => c.Monarchs).ThenInclude(m => m.Dynasty)
+                .Include(c => c.Monarchs).ThenInclude(m => m.Ratings)
+                .ToListAsync();
             List<CountryWithMonarchsDto> countryWithMonarchsDtos = new List<CountryWithMonarchsDto>();
             foreach (Country country in countries) 
             {
