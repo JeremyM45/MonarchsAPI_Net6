@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.Services.CountryServices;
 using MonarchsAPI_Net6.Services.DynastyServices;
 using MonarchsAPI_Net6.Services.MonarchServices;
 using MonarchsAPI_Net6.Services.RatingServices;
@@ -18,6 +19,7 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IMonarchServices, MonarchServices>();
 builder.Services.AddScoped<IDynastyServices, DyanstyServices>();
+builder.Services.AddScoped<ICountryServices, CountryServices>();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
