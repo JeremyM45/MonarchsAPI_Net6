@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
-using MonarchsAPI_Net6.DTOs;
+using MonarchsAPI_Net6.DTOs.RatingDtos;
 using MonarchsAPI_Net6.Models;
 using System.Runtime.InteropServices;
 

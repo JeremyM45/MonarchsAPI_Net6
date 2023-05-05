@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
-using MonarchsAPI_Net6.DTOs;
+using MonarchsAPI_Net6.DTOs.CountryDtos;
 using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.CountryServices
@@ -13,16 +13,16 @@ namespace MonarchsAPI_Net6.Services.CountryServices
             _dataContext = dataContext;
         }
 
-        public async Task<List<CountryWithMonarchsDto>> GetAll()
+        public async Task<List<CountryResponseDto>> GetAll()
         {
             List<Country> countries = await _dataContext.Countries
                 .Include(c => c.Monarchs).ThenInclude(m => m.Dynasty)
                 .Include(c => c.Monarchs).ThenInclude(m => m.Ratings)
                 .ToListAsync();
-            List<CountryWithMonarchsDto> countryWithMonarchsDtos = new List<CountryWithMonarchsDto>();
+            List<CountryResponseDto> countryWithMonarchsDtos = new List<CountryResponseDto>();
             foreach (Country country in countries) 
             {
-                CountryWithMonarchsDto newCountryWithMonarchsDtos = new CountryWithMonarchsDto
+                CountryResponseDto newCountryWithMonarchsDtos = new CountryResponseDto
                 {
                     Id = country.Id,
                     Name = country.Name,

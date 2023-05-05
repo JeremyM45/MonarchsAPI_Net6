@@ -1,4 +1,4 @@
-﻿namespace MonarchsAPI_Net6.DTOs
+﻿namespace MonarchsAPI_Net6.DTOs.RatingDtos
 {
     public class EditRatingDto
     {

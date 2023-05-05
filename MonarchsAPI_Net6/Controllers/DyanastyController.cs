@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MonarchsAPI_Net6.DTOs;
+using MonarchsAPI_Net6.DTOs.DyanstyDtos;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.DynastyServices;
 
