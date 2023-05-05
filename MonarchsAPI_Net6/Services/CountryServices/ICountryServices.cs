@@ -5,6 +5,6 @@ namespace MonarchsAPI_Net6.Services.CountryServices
 {
     public interface ICountryServices
     {
-        Task<List<CountryResponseDto>> GetAll();
+        Task<List<Country>> GetAll();
     }
 }

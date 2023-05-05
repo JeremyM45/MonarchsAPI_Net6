@@ -13,24 +13,14 @@ namespace MonarchsAPI_Net6.Services.CountryServices
             _dataContext = dataContext;
         }
 
-        public async Task<List<CountryResponseDto>> GetAll()
+        public async Task<List<Country>> GetAll()
         {
             List<Country> countries = await _dataContext.Countries
                 .Include(c => c.Monarchs).ThenInclude(m => m.Dynasty)
                 .Include(c => c.Monarchs).ThenInclude(m => m.Ratings)
                 .ToListAsync();
-            List<CountryResponseDto> countryWithMonarchsDtos = new List<CountryResponseDto>();
-            foreach (Country country in countries) 
-            {
-                CountryResponseDto newCountryWithMonarchsDtos = new CountryResponseDto
-                {
-                    Id = country.Id,
-                    Name = country.Name,
-                    Monarchs = country.Monarchs
-                };
-                countryWithMonarchsDtos.Add(newCountryWithMonarchsDtos);
-            }
-            return countryWithMonarchsDtos;
+            
+            return countries;
         }
     }
 }
