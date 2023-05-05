@@ -16,14 +16,14 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
             _mapper = mapper;
             _dataContext = context;
         }
-        public async Task<List<DynastyResponseDto>> GetAll()
+        public async Task<List<Dynasty>> GetAll()
         {
             List<Dynasty> dynasties = await _dataContext.Dynasties
                 .Include(d => d.Monarchs).ThenInclude(m => m.Countries)
                 .Include(c => c.Monarchs).ThenInclude(m => m.Ratings)
                 .ToListAsync();
 
-            return dynasties.Select(d => _mapper.Map<DynastyResponseDto>(d)).ToList();
+            return dynasties;
         }
     }
 }

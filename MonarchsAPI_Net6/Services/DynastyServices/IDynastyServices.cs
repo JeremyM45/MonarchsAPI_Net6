@@ -5,6 +5,6 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
 {
     public interface IDynastyServices
     {
-        Task<List<DynastyWithMonarchsDto>> GetAll();
+        Task<List<Dynasty>> GetAll();
     }
 }

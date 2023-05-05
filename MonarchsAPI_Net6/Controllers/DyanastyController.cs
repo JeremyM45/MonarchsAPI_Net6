@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.DyanstyDtos;
 using MonarchsAPI_Net6.Models;
@@ -11,16 +12,20 @@ namespace MonarchsAPI_Net6.Controllers
     public class DyanastyController : ControllerBase
     {
         private readonly IDynastyServices _dynastyServices;
-        public DyanastyController(IDynastyServices dynastyServices)
+        private readonly IMapper _mapper;
+
+        public DyanastyController(IDynastyServices dynastyServices, IMapper mapper)
         {
+            _mapper = mapper;
             _dynastyServices = dynastyServices;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<DynastyWithMonarchsDto>>> GetAllDynasties()
+        public async Task<ActionResult<List<DynastyResponseDto>>> GetAllDynasties()
         {
-            List<DynastyWithMonarchsDto> dynasties = await _dynastyServices.GetAll();
-            return Ok(dynasties);
+            List<Dynasty> dynasties = await _dynastyServices.GetAll();
+
+            return Ok(dynasties.Select(d => _mapper.Map<DynastyResponseDto>(d)));
         }
     }
 }
