@@ -103,9 +103,13 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
             return await GetById(monarchToEdit.Id);
         }
 
-        public Task<bool> RemoveMonarch(int id)
+        public async Task<bool> RemoveMonarch(int id)
         {
-            throw new NotImplementedException();
+            Monarch? monarchToDelete = await _dbContext.Monarchs.FirstOrDefaultAsync(m => m.Id == id);
+            if(monarchToDelete == null) { throw new Exception("Can't Find Monarch By Id"); }
+            _dbContext.Monarchs.Remove(monarchToDelete);
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
     }
 }

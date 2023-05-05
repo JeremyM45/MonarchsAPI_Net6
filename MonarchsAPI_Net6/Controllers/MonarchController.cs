@@ -10,22 +10,22 @@ namespace MonarchsAPI_Net6.Controllers
     [ApiController]
     public class MonarchController : ControllerBase
     {
-        private readonly IMonarchServices _moarchServices;
+        private readonly IMonarchServices _monarchServices;
         public MonarchController(IMonarchServices moarchServices)
         {
-            _moarchServices = moarchServices;
+            _monarchServices = moarchServices;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<Monarch>>> GetAllMonarchs()
         {
-            List<Monarch> monarchs = await _moarchServices.GetAll();
+            List<Monarch> monarchs = await _monarchServices.GetAll();
             return Ok(monarchs);
         }
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Monarch>> GetMonarchById(int id)
         {
-            Monarch monarch = await _moarchServices.GetById(id);
+            Monarch monarch = await _monarchServices.GetById(id);
             if(monarch == null) { return NotFound();  }
             return Ok(monarch);
         }
@@ -33,9 +33,9 @@ namespace MonarchsAPI_Net6.Controllers
         [HttpPost]
         public async Task<ActionResult> AddMonarch(CreateMonarchRequestDto newMonarchDto)
         {
-            if (await _moarchServices.AddMonarch(newMonarchDto))
+            if (await _monarchServices.AddMonarch(newMonarchDto))
             {
-                return CreatedAtAction(nameof(AddMonarch), await _moarchServices.GetByName(newMonarchDto.Name));
+                return CreatedAtAction(nameof(AddMonarch), await _monarchServices.GetByName(newMonarchDto.Name));
             }
             return BadRequest();
         }
@@ -43,7 +43,17 @@ namespace MonarchsAPI_Net6.Controllers
         [HttpPut]
         public async Task<ActionResult> EditMonarch(EditMonarchRequestDto editedMonarchDto)
         {
-            return Ok(await _moarchServices.EditMonarch(editedMonarchDto));
+            return Ok(await _monarchServices.EditMonarch(editedMonarchDto));
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteMonarch(int id)
+        {
+            if(await _monarchServices.RemoveMonarch(id))
+            {
+                return NoContent();
+            }
+            return BadRequest();
         }
     }
 }
