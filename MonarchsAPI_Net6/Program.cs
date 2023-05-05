@@ -20,7 +20,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IMonarchServices, MonarchServices>();
-builder.Services.AddScoped<IDynastyServices, DyanstyServices>();
+builder.Services.AddScoped<IDynastyServices, DynastyServices>();
 builder.Services.AddScoped<ICountryServices, CountryServices>();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));

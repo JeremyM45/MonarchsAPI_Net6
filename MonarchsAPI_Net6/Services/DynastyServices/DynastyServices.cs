@@ -6,12 +6,12 @@ using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.DynastyServices
 {
-    public class DyanstyServices : IDynastyServices
+    public class DynastyServices : IDynastyServices
     {
         private readonly DataContext _dataContext;
         private readonly IMapper _mapper;
 
-        public DyanstyServices(DataContext context, IMapper mapper)
+        public DynastyServices(DataContext context, IMapper mapper)
         {
             _mapper = mapper;
             _dataContext = context;
