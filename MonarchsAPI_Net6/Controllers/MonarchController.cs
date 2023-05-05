@@ -31,9 +31,14 @@ namespace MonarchsAPI_Net6.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddMonarch(CreateMonarchDto newMonarchDto)
+        public async Task<ActionResult> AddMonarch(CreateMonarchRequestDto newMonarchDto)
         {
-            if(await _moarchServices.AddMonarch(newMonarchDto))
+            Console.WriteLine("Dto " + newMonarchDto.Name);
+            Console.WriteLine("Dto " + newMonarchDto.Description);
+            Console.WriteLine("Dto " + newMonarchDto.WikiLink);
+            Console.WriteLine("Dto " + newMonarchDto.Reign);
+            Console.WriteLine("Dto " + newMonarchDto.DynastyId);
+            if (await _moarchServices.AddMonarch(newMonarchDto))
             {
                 return CreatedAtAction(nameof(AddMonarch), await _moarchServices.GetByName(newMonarchDto.Name));
             }
