@@ -34,9 +34,10 @@ namespace MonarchsAPI_Net6.Controllers
         {
             Rating newRating = new Rating
             {
-                RatingValue = ratingDto.ratingValue,
-                Comment = ratingDto.comment,
-                UserId = ratingDto.UserId
+                RatingValue = ratingDto.RatingValue,
+                Comment = ratingDto.Comment,
+                UserId = ratingDto.UserId,
+                MonarchId = ratingDto.MonachId
             };
             if(await _ratingServices.AddRating(newRating))
             {
