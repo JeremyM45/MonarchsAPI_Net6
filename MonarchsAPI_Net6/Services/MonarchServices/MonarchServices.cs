@@ -51,18 +51,7 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
 
         public async Task<bool> AddMonarch(CreateMonarchRequestDto newMonarchDto)
         {
-            Console.WriteLine("Dto " + newMonarchDto.Name);
-            Console.WriteLine("Dto " + newMonarchDto.Description);
-            Console.WriteLine("Dto " + newMonarchDto.WikiLink);
-            Console.WriteLine("Dto " + newMonarchDto.Reign);
-            Console.WriteLine("Dto " + newMonarchDto.DynastyId);
             Monarch newMonarch = _mapper.Map<Monarch>(newMonarchDto);
-            Console.WriteLine("New " + newMonarch.Name);
-            Console.WriteLine("New " + newMonarch.Description);
-            Console.WriteLine("New " + newMonarch.WikiLink);
-            Console.WriteLine("New " + newMonarch.Reign);
-            Console.WriteLine("New " + newMonarch.DynastyId);
-
             Dynasty? dynasty = await _dbContext.Dynasties.Where(d => d.Id == newMonarch.DynastyId).FirstOrDefaultAsync();
             if(dynasty == null) { return false; }
             newMonarch.Dynasty = dynasty;
@@ -85,6 +74,38 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
             }
         }
 
-        
+        public async Task<Monarch> EditMonarch(EditMonarchRequestDto editedMonarchDto)
+        {
+            Monarch? monarchToEdit = await _dbContext.Monarchs.Where(m => m.Id == editedMonarchDto.Id).FirstOrDefaultAsync(); if(monarchToEdit == null) { throw new Exception(); }
+            monarchToEdit.Name = editedMonarchDto.Name;
+            monarchToEdit.Description = editedMonarchDto.Description;
+            monarchToEdit.WikiLink = editedMonarchDto.WikiLink;
+            monarchToEdit.Reign = editedMonarchDto.Reign;
+            monarchToEdit.DynastyId = editedMonarchDto.DynastyId;
+            monarchToEdit.Countries = new List<Country>();
+
+            Country[] countries = await _dbContext.Countries.ToArrayAsync();
+            foreach(int countryId in editedMonarchDto.CountryIds)
+            {
+                Country? countryToAdd = countries.Where(c => c.Id == countryId).FirstOrDefault();
+                if(countryToAdd == null) { throw new Exception("Could Not Find Country By Id"); }
+                monarchToEdit.Countries.Add(countryToAdd);
+            }
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            return await GetById(monarchToEdit.Id);
+        }
+
+        public Task<bool> RemoveMonarch(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

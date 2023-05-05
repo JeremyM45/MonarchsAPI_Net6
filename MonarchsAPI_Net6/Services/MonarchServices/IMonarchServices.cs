@@ -9,5 +9,7 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
         Task<Monarch> GetById(int id);
         Task<Monarch> GetByName(string name);
         Task<bool> AddMonarch(CreateMonarchRequestDto newMonarchDto);
+        Task<Monarch> EditMonarch(EditMonarchRequestDto editedMonarchDto);
+        Task<bool> RemoveMonarch(int id);
     }
 }
