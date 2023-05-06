@@ -22,5 +22,11 @@ namespace MonarchsAPI_Net6.Services.CountryServices
             
             return countries;
         }
+        public async Task<List<Country>> GetAllMin()
+        {
+            List<Country> countries = await _dataContext.Countries.ToListAsync();
+
+            return countries;
+        }
     }
 }

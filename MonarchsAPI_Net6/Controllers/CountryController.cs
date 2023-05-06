@@ -26,5 +26,12 @@ namespace MonarchsAPI_Net6.Controllers
             if(countries == null) { return BadRequest(); }
             return Ok(countries.Select(c => _mapper.Map<CountryResponseDto>(c)));
         }
+        [HttpGet("min")]
+        public async Task<ActionResult<List<CountryResponseMinDto>>> GetAllCountriesMin()
+        {
+            List<Country> countries = await _countryServices.GetAllMin();
+            if (countries == null) { return BadRequest(); }
+            return Ok(countries.Select(c => _mapper.Map<CountryResponseMinDto>(c)));
+        }
     }
 }

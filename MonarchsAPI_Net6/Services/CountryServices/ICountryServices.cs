@@ -6,5 +6,6 @@ namespace MonarchsAPI_Net6.Services.CountryServices
     public interface ICountryServices
     {
         Task<List<Country>> GetAll();
+        Task<List<Country>> GetAllMin();
     }
 }
