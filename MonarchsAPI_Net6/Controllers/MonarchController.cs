@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.MonarchsDtos;
 using MonarchsAPI_Net6.Models;
@@ -11,9 +12,11 @@ namespace MonarchsAPI_Net6.Controllers
     public class MonarchController : ControllerBase
     {
         private readonly IMonarchServices _monarchServices;
-        public MonarchController(IMonarchServices moarchServices)
+        private readonly IMapper _mapper;
+        public MonarchController(IMonarchServices moarchServices, IMapper mapper)
         {
             _monarchServices = moarchServices;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -21,6 +24,21 @@ namespace MonarchsAPI_Net6.Controllers
         {
             List<Monarch> monarchs = await _monarchServices.GetAll();
             return Ok(monarchs);
+        }
+        [HttpGet("[action]")]
+        public async Task<ActionResult<List<MonarchResponseDashboardDto>>> GetAllMonarchsDashboard()
+        {
+            List<Monarch> monarchs = await _monarchServices.GetAll();
+            List<MonarchResponseDashboardDto> monarchDtos = monarchs.Select(m => _mapper.Map<MonarchResponseDashboardDto>(m)).ToList();
+            foreach(MonarchResponseDashboardDto monarchDto in monarchDtos)
+            {
+                foreach(Country country in monarchDto.Countries)
+                {
+                    monarchDto.CountryIds.Add(country.Id);
+                }
+            }
+
+            return Ok(monarchDtos);
         }
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Monarch>> GetMonarchById(int id)
