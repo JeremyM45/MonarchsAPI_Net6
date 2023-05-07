@@ -27,5 +27,12 @@ namespace MonarchsAPI_Net6.Controllers
 
             return Ok(dynasties.Select(d => _mapper.Map<DynastyResponseDto>(d)));
         }
+        [HttpGet("min")]
+        public async Task<ActionResult<List<DynastyResponseDto>>> GetAllDynastiesMin()
+        {
+            List<Dynasty> dynasties = await _dynastyServices.GetAll();
+
+            return Ok(dynasties.Select(d => _mapper.Map<DynastyResponseMinDto>(d)));
+        }
     }
 }

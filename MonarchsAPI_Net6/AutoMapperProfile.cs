@@ -11,6 +11,7 @@ namespace MonarchsAPI_Net6
         public AutoMapperProfile()
         {
             CreateMap<Dynasty, DynastyResponseDto>();
+            CreateMap<Dynasty, DynastyResponseMinDto>();
             CreateMap<Country, CountryResponseDto>();
             CreateMap<Country, CountryResponseMinDto>();
             CreateMap<CreateMonarchRequestDto, Monarch>();
