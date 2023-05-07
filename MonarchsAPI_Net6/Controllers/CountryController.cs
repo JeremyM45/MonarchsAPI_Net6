@@ -26,22 +26,14 @@ namespace MonarchsAPI_Net6.Controllers
             List<Country> countries = await _countryServices.GetAll();
             if(countries == null) { return BadRequest(); }
             List<CountryResponseDto> countryDtos = countries.Select(c => _mapper.Map<CountryResponseDto>(c)).ToList();
-            foreach(CountryResponseDto countryDto in countryDtos)
+            foreach(CountryResponseDto country in countryDtos)
             {
-                foreach(MonarchMinDto monarchDto in countryDto.Monarchs)
+                foreach(MonarchMinDto monarch in country.Monarchs)
                 {
-                    foreach(Country country in countries)
-                    {
-                        foreach(Monarch monarch in country.Monarchs)
-                        {
-                            if(monarch.Id == monarchDto.Id)
-                            {
-                                monarchDto.CountryIds.Add(country.Id);
-                            }
-                        }
-                    }
+                    monarch.CountryIds = await _countryServices.GetCountryIdsByMonarch(monarch.Id);
                 }
             }
+
             return Ok(countryDtos);
         }
         [HttpGet("min")]

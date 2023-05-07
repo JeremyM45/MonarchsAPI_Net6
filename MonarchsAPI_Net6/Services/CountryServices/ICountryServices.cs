@@ -7,5 +7,6 @@ namespace MonarchsAPI_Net6.Services.CountryServices
     {
         Task<List<Country>> GetAll();
         Task<List<Country>> GetAllMin();
+        Task<List<int>> GetCountryIdsByMonarch(int monarchId);
     }
 }

@@ -28,5 +28,16 @@ namespace MonarchsAPI_Net6.Services.CountryServices
 
             return countries;
         }
+
+        public async Task<List<int>> GetCountryIdsByMonarch(int monarchId)
+        {
+            Monarch? monarch = await _dataContext.Monarchs.Where(m => m.Id == monarchId).FirstOrDefaultAsync(); if(monarch == null) { throw new Exception(); }
+            List<int> countryIds = new List<int>();
+            foreach(Country country in monarch.Countries)
+            {
+                countryIds.Add(country.Id);
+            }
+            return countryIds;
+        }
     }
 }
