@@ -15,6 +15,7 @@ namespace MonarchsAPI_Net6
             CreateMap<Country, CountryResponseMinDto>();
             CreateMap<CreateMonarchRequestDto, Monarch>();
             CreateMap<Monarch, MonarchResponseDashboardDto>();
+            CreateMap<Monarch, MonarchMinDto>();
 
         }
     }
