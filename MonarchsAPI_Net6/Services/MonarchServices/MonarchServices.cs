@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
 using MonarchsAPI_Net6.DTOs.MonarchsDtos;
 using MonarchsAPI_Net6.Models;
+using System.Diagnostics.Metrics;
 
 namespace MonarchsAPI_Net6.Services.MonarchServices
 {
@@ -77,16 +78,26 @@ namespace MonarchsAPI_Net6.Services.MonarchServices
         public async Task<Monarch> EditMonarch(EditMonarchRequestDto editedMonarchDto)
         {
             Monarch? monarchToEdit = await _dbContext.Monarchs.Where(m => m.Id == editedMonarchDto.Id).FirstOrDefaultAsync(); if(monarchToEdit == null) { throw new Exception(); }
+            List<Country> currentCountries = await _dbContext.Countries.Where(c => c.Monarchs.Contains(monarchToEdit)).Include(c => c.Monarchs).ToListAsync();
+            
+            
+            foreach (Country country in currentCountries)
+            {
+                country.Monarchs.Remove(monarchToEdit);
+                
+            }
+            monarchToEdit.Countries = new List<Country>();
+            await _dbContext.SaveChangesAsync();
             monarchToEdit.Name = editedMonarchDto.Name;
             monarchToEdit.Description = editedMonarchDto.Description;
             monarchToEdit.WikiLink = editedMonarchDto.WikiLink;
             monarchToEdit.Reign = editedMonarchDto.Reign;
             monarchToEdit.DynastyId = editedMonarchDto.DynastyId;
-            monarchToEdit.Countries = new List<Country>();
 
-            Country[] countries = await _dbContext.Countries.ToArrayAsync();
-            foreach(int countryId in editedMonarchDto.CountryIds)
-            {
+            List<Country> countries = await _dbContext.Countries.Include(c => c.Monarchs).ToListAsync();
+
+            foreach (int countryId in editedMonarchDto.CountryIds)
+            {   
                 Country? countryToAdd = countries.Where(c => c.Id == countryId).FirstOrDefault();
                 if(countryToAdd == null) { throw new Exception("Could Not Find Country By Id"); }
                 monarchToEdit.Countries.Add(countryToAdd);
