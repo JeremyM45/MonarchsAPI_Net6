@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
 using MonarchsAPI_Net6.DTOs.CountryDtos;
 using MonarchsAPI_Net6.Models;
@@ -8,9 +9,28 @@ namespace MonarchsAPI_Net6.Services.CountryServices
     public class CountryServices : ICountryServices
     {
         private readonly DataContext _dataContext;
-        public CountryServices(DataContext dataContext)
+        private readonly IMapper _mapper;
+        public CountryServices(DataContext dataContext, IMapper mapper)
         {
+            _mapper= mapper;
             _dataContext = dataContext;
+        }
+
+        public async Task<bool> AddCountry(CreateCountryRequestDto countryDto)
+        {
+            Country newCountry = _mapper.Map<Country>(countryDto);
+            try
+            {
+                await _dataContext.Countries.AddAsync(newCountry);
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
         }
 
         public async Task<List<Country>> GetAll()

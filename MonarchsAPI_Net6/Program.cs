@@ -23,7 +23,10 @@ builder.Services.AddScoped<IMonarchServices, MonarchServices>();
 builder.Services.AddScoped<IDynastyServices, DynastyServices>();
 builder.Services.AddScoped<ICountryServices, CountryServices>();
 builder.Services.AddDbContext<DataContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), options =>
+    {
+        options.CommandTimeout(120);
+    });
 });
 
 var app = builder.Build();

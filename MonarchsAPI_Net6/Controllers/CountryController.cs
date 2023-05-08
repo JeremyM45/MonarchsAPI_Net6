@@ -43,5 +43,15 @@ namespace MonarchsAPI_Net6.Controllers
             if (countries == null) { return BadRequest(); }
             return Ok(countries.Select(c => _mapper.Map<CountryResponseMinDto>(c)));
         }
+
+        [HttpPost]
+        public async Task<ActionResult> AddCountry(CreateCountryRequestDto countryDto)
+        {
+            if(await _countryServices.AddCountry(countryDto))
+            {
+                return CreatedAtAction(nameof(AddCountry), countryDto);
+            }
+            return BadRequest();
+        }
     }
 }
