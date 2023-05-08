@@ -12,6 +12,7 @@ namespace MonarchsAPI_Net6
         {
             CreateMap<Dynasty, DynastyResponseDto>();
             CreateMap<Dynasty, DynastyResponseMinDto>();
+            CreateMap<CreateDynastyDto, Dynasty>();
             CreateMap<Country, CountryResponseDto>();
             CreateMap<Country, CountryResponseMinDto>();
             CreateMap<CreateCountryRequestDto, Country>();

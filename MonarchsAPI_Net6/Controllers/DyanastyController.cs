@@ -34,5 +34,15 @@ namespace MonarchsAPI_Net6.Controllers
 
             return Ok(dynasties.Select(d => _mapper.Map<DynastyResponseMinDto>(d)));
         }
+
+        [HttpPost]
+        public async Task<ActionResult> AddDynasty(CreateDynastyDto dynastyDto)
+        {
+            if(await _dynastyServices.AddDynasty(dynastyDto))
+            {
+                return CreatedAtAction(nameof(AddDynasty), dynastyDto);
+            }
+            return BadRequest();
+        }
     }
 }
