@@ -30,13 +30,8 @@ namespace MonarchsAPI_Net6.Controllers
         {
             List<Monarch> monarchs = await _monarchServices.GetAll();
             List<MonarchResponseDashboardDto> monarchDtos = monarchs.Select(m => _mapper.Map<MonarchResponseDashboardDto>(m)).ToList();
-            foreach(MonarchResponseDashboardDto monarchDto in monarchDtos)
-            {
-                foreach(Country country in monarchDto.Countries)
-                {
-                    monarchDto.CountryIds.Add(country.Id);
-                }
-            }
+
+            monarchDtos.ForEach(mDto => monarchs.Where(m => m.Id == mDto.Id).FirstOrDefault()?.Countries.ForEach(c => mDto.CountryIds.Add(c.Id)));
 
             return Ok(monarchDtos);
         }
