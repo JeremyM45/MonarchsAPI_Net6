@@ -59,5 +59,22 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
                 throw ex;
             }
         }
+
+        public async Task<bool> DeleteDynasty(int id)
+        {
+            Dynasty? dynastyToRemove = await _dataContext.Dynasties.Where(d => d.Id == id).FirstOrDefaultAsync(); if (dynastyToRemove == null) { throw new Exception(); }
+
+            try
+            {
+                _dataContext.Dynasties.Remove(dynastyToRemove);
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

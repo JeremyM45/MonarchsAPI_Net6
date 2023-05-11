@@ -8,5 +8,6 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
         Task<List<Dynasty>> GetAll();
         Task<bool> AddDynasty(CreateDynastyDto dynastyDto);
         Task<Dynasty> EditDynasty(EditDynastyRequestDto dynastyDto);
+        Task<bool> DeleteDynasty(int id);
     }
 }

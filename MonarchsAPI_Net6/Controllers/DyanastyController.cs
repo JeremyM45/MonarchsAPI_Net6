@@ -51,5 +51,15 @@ namespace MonarchsAPI_Net6.Controllers
             Dynasty editedDynasty = await _dynastyServices.EditDynasty(dynastyDto);
             return Ok(editedDynasty);
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteDynasty(int id)
+        {
+            if(await _dynastyServices.DeleteDynasty(id))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }
