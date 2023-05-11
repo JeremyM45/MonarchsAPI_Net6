@@ -33,6 +33,24 @@ namespace MonarchsAPI_Net6.Services.CountryServices
             
         }
 
+        public async Task<bool> DeleteCountry(int id)
+        {
+            Country? countryToDelete = await _dataContext.Countries.Where(c => c.Id == id).FirstOrDefaultAsync(); if (countryToDelete == null) { throw new Exception(); }
+
+            try
+            {
+                _dataContext.Countries.Remove(countryToDelete);
+                await _dataContext.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+
         public async Task<Country> EditCountry(EditCountryDto countryDto)
         {
             Country? countryToEdit = await _dataContext.Countries.Where(c => c.Id == countryDto.Id).FirstOrDefaultAsync(); if (countryToEdit == null) { throw new Exception(); }

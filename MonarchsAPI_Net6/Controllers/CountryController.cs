@@ -59,5 +59,15 @@ namespace MonarchsAPI_Net6.Controllers
             Country editedCountry = await _countryServices.EditCountry(countryDto);
             return Ok(editedCountry);
         }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteCountry(int id)
+        {
+            if(await _countryServices.DeleteCountry(id))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
     }
 }

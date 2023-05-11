@@ -10,5 +10,6 @@ namespace MonarchsAPI_Net6.Services.CountryServices
         Task<List<int>> GetCountryIdsByMonarch(int monarchId);
         Task<bool> AddCountry(CreateCountryRequestDto countryDto);
         Task<Country> EditCountry(EditCountryDto countryDto);
+        Task<bool> DeleteCountry(int id);
     }
 }
