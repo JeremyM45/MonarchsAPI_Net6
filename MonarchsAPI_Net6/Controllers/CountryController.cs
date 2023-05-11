@@ -53,5 +53,11 @@ namespace MonarchsAPI_Net6.Controllers
             }
             return BadRequest();
         }
+        [HttpPut]
+        public async Task<ActionResult> EditCountry(EditCountryDto countryDto)
+        {
+            Country editedCountry = await _countryServices.EditCountry(countryDto);
+            return Ok(editedCountry);
+        }
     }
 }

@@ -33,6 +33,22 @@ namespace MonarchsAPI_Net6.Services.CountryServices
             
         }
 
+        public async Task<Country> EditCountry(EditCountryDto countryDto)
+        {
+            Country? countryToEdit = await _dataContext.Countries.Where(c => c.Id == countryDto.Id).FirstOrDefaultAsync(); if (countryToEdit == null) { throw new Exception(); }
+            try
+            {
+                countryToEdit.Name = countryDto.Name;
+                await _dataContext.SaveChangesAsync();
+                return countryToEdit;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         public async Task<List<Country>> GetAll()
         {
             List<Country> countries = await _dataContext.Countries
