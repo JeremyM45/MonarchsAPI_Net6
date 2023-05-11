@@ -43,5 +43,21 @@ namespace MonarchsAPI_Net6.Services.DynastyServices
 
             return dynasties;
         }
+
+        public async Task<Dynasty> EditDynasty(EditDynastyRequestDto dynastyDto)
+        {
+            Dynasty? dynastyToEdit = await _dataContext.Dynasties.Where(d => d.Id == dynastyDto.Id).FirstOrDefaultAsync(); if(dynastyToEdit == null){ throw new Exception(); }
+            try
+            {
+                dynastyToEdit.Name = dynastyDto.Name;
+                await _dataContext.SaveChangesAsync();
+                return dynastyToEdit;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

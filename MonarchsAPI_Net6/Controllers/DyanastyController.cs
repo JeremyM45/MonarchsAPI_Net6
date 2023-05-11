@@ -44,5 +44,12 @@ namespace MonarchsAPI_Net6.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPut]
+        public async Task<ActionResult> EditDynasty(EditDynastyRequestDto dynastyDto)
+        {
+            Dynasty editedDynasty = await _dynastyServices.EditDynasty(dynastyDto);
+            return Ok(editedDynasty);
+        }
     }
 }
