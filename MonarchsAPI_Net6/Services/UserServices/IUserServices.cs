@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MonarchsAPI_Net6.DTOs.UserDtos;
 using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.UserServices
@@ -10,5 +11,6 @@ namespace MonarchsAPI_Net6.Services.UserServices
         Task<bool> AddUser(User user);
         Task<bool> EditUser(User user);
         Task<bool> DeleteUser(int id);
+        Task<User> LoginUser(UserLoginRequestDto loginDto);
     }
 }

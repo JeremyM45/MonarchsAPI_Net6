@@ -36,6 +36,17 @@ namespace MonarchsAPI_Net6.Controllers
             return Ok(user);
         }
 
+        [HttpGet("[action]")]
+        public async Task<ActionResult<User>> LoginUser([FromQuery] UserLoginRequestDto userLoginRequest)
+        {
+            Console.WriteLine("UserName DTO - " + userLoginRequest.UserName);
+            Console.WriteLine("Password DTO - " + userLoginRequest.Password);
+            Console.WriteLine("Email DTO - " + userLoginRequest.Email);
+            User? user = await _userServices.LoginUser(userLoginRequest);
+            if (user == null) { return NotFound(); };
+            return Ok(user);
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddUser(CreateUserDto request)
         {

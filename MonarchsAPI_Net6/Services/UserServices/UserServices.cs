@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.DTOs.UserDtos;
 using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6.Services.UserServices
@@ -64,6 +65,18 @@ namespace MonarchsAPI_Net6.Services.UserServices
 
             await _dbContext.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<User> LoginUser(UserLoginRequestDto loginDto)
+        {
+            User? user = await _dbContext.Users.Where(u => u.UserName == loginDto.UserName && u.UserEmail == loginDto.Email && u.Password == loginDto.Password).FirstOrDefaultAsync();
+            Console.WriteLine("Found UserName - " + user?.UserName);
+            if(user == null)
+            {
+                Console.WriteLine("User is Null");
+                return null;
+            }
+            return user;
         }
     }
 }
