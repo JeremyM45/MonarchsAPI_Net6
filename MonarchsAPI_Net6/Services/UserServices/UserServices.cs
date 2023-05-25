@@ -69,7 +69,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
 
         public async Task<User> LoginUser(UserLoginRequestDto loginDto)
         {
-            User? user = await _dbContext.Users.Where(u => u.UserName == loginDto.UserName && u.UserEmail == loginDto.Email && u.Password == loginDto.Password).FirstOrDefaultAsync();
+            User? user = await _dbContext.Users.Where(u => u.UserName == loginDto.UserName && u.UserEmail == loginDto.Email && u.Password == loginDto.Password).Include(u => u.Ratings).FirstOrDefaultAsync();
             Console.WriteLine("Found UserName - " + user?.UserName);
             if(user == null)
             {
