@@ -5,6 +5,6 @@
         public float RatingValue { get; set; }
         public string Comment { get; set; } = string.Empty;
         public int UserId { get; set; }
-        public int MonachId { get; set; }
+        public int MonarchId { get; set; }
     }
 }
