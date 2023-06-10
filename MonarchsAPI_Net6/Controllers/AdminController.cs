@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.AdminDtos;
 using MonarchsAPI_Net6.Services.AdminServices;
@@ -16,7 +17,7 @@ namespace MonarchsAPI_Net6.Controllers
             _adminService = adminService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("register"), Authorize(Roles = "Admin")]
         public async Task<ActionResult> RegisterAdmin(AdminLoginRequest requestDto)
         {
             if (await _adminService.RegisterAdmin(requestDto))
