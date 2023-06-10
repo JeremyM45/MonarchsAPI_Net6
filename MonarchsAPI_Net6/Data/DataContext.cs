@@ -15,6 +15,7 @@ namespace MonarchsAPI_Net6.Data
         public DbSet<Monarch> Monarchs { get; set; }
         public DbSet<Dynasty> Dynasties { get; set; }
         public DbSet<Country> Countries { get; set; }
+        public DbSet<Admin> Admins { get; set; }
 
     }
 }
