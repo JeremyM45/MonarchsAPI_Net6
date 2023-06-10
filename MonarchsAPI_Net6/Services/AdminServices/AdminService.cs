@@ -30,6 +30,7 @@ namespace MonarchsAPI_Net6.Services.AdminServices
             {
                 return new AdminLoginResponse()
                 {
+                    Username = foundAdmin.Username,
                     Token = GenerateToken(requestDto)
                 };
             }
@@ -55,7 +56,62 @@ namespace MonarchsAPI_Net6.Services.AdminServices
             {
                 throw ex;
             }
-        }   
+        }
+        public async Task<bool> DeleteAdmin(int id)
+        {
+            Admin adminToDelete = await FindById(id);
+            if(adminToDelete != null)
+            {
+                try
+                {
+                    _dbContext.Admins.Remove(adminToDelete);
+                    await _dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<List<Admin>> GetAllAdmins()
+        {
+            try
+            {
+                List<Admin> admins = await _dbContext.Admins.ToListAsync();
+                return admins;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<Admin> GetAdminById(int id)
+        {
+            try
+            {
+                return await FindById(id);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private async Task<Admin> FindById(int id)
+        {
+            Admin? admin = await _dbContext.Admins.Where(a => a.Id == id).FirstOrDefaultAsync();
+            if (admin != null)
+            {
+                return admin;
+            }
+            return null;
+        }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
