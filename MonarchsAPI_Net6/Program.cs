@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MonarchsAPI_Net6.Data;
+using MonarchsAPI_Net6.Services.AdminServices;
 using MonarchsAPI_Net6.Services.CountryServices;
 using MonarchsAPI_Net6.Services.DynastyServices;
 using MonarchsAPI_Net6.Services.MonarchServices;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IMonarchServices, MonarchServices>();
 builder.Services.AddScoped<IDynastyServices, DynastyServices>();
 builder.Services.AddScoped<ICountryServices, CountryServices>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddDbContext<DataContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), options =>
     {
