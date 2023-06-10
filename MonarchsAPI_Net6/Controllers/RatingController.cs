@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
 using MonarchsAPI_Net6.DTOs.RatingDtos;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.RatingServices;
+using System.Data;
 
 namespace MonarchsAPI_Net6.Controllers
 {
@@ -46,7 +48,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteRating(int id)
         {
             if (await _ratingServices.DeleteRating(id))
@@ -56,8 +58,8 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
-        public async Task<ActionResult> EditUser(EditRatingDto ratingDto)
+        [HttpPut, Authorize(Roles = "Admin")]
+        public async Task<ActionResult> EditRating(EditRatingDto ratingDto)
         {
             if (await _ratingServices.EditRating(ratingDto))
             {

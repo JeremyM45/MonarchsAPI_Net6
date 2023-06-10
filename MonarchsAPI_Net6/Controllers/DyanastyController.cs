@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.DyanstyDtos;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.DynastyServices;
+using System.Data;
 
 namespace MonarchsAPI_Net6.Controllers
 {
@@ -35,7 +37,7 @@ namespace MonarchsAPI_Net6.Controllers
             return Ok(dynasties.Select(d => _mapper.Map<DynastyResponseMinDto>(d)));
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddDynasty(CreateDynastyDto dynastyDto)
         {
             if(await _dynastyServices.AddDynasty(dynastyDto))
@@ -45,14 +47,14 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditDynasty(EditDynastyRequestDto dynastyDto)
         {
             Dynasty editedDynasty = await _dynastyServices.EditDynasty(dynastyDto);
             return Ok(editedDynasty);
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteDynasty(int id)
         {
             if(await _dynastyServices.DeleteDynasty(id))

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MonarchsAPI_Net6.Data;
@@ -55,7 +56,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();   
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteUser(int id)
         {
             if(await _userServices.DeleteUser(id))
@@ -65,7 +66,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditUser(User user)
         {
             if(await _userServices.EditUser(user))

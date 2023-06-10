@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.CountryDtos;
 using MonarchsAPI_Net6.DTOs.MonarchsDtos;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.CountryServices;
+using System.Data;
 
 namespace MonarchsAPI_Net6.Controllers
 {
@@ -44,7 +46,7 @@ namespace MonarchsAPI_Net6.Controllers
             return Ok(countries.Select(c => _mapper.Map<CountryResponseMinDto>(c)));
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddCountry(CreateCountryRequestDto countryDto)
         {
             if(await _countryServices.AddCountry(countryDto))
@@ -53,14 +55,14 @@ namespace MonarchsAPI_Net6.Controllers
             }
             return BadRequest();
         }
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditCountry(EditCountryDto countryDto)
         {
             Country editedCountry = await _countryServices.EditCountry(countryDto);
             return Ok(editedCountry);
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCountry(int id)
         {
             if(await _countryServices.DeleteCountry(id))

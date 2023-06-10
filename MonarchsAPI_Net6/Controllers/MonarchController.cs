@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MonarchsAPI_Net6.DTOs.MonarchsDtos;
 using MonarchsAPI_Net6.Models;
 using MonarchsAPI_Net6.Services.MonarchServices;
+using System.Data;
 
 namespace MonarchsAPI_Net6.Controllers
 {
@@ -25,7 +27,7 @@ namespace MonarchsAPI_Net6.Controllers
             List<Monarch> monarchs = await _monarchServices.GetAll();
             return Ok(monarchs);
         }
-        [HttpGet("[action]")]
+        [HttpGet("[action]"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<MonarchResponseDashboardDto>>> GetAllMonarchsDashboard()
         {
             List<Monarch> monarchs = await _monarchServices.GetAll();
@@ -43,7 +45,7 @@ namespace MonarchsAPI_Net6.Controllers
             return Ok(monarch);
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddMonarch(CreateMonarchRequestDto newMonarchDto)
         {
             if (await _monarchServices.AddMonarch(newMonarchDto))
@@ -53,13 +55,13 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut, Authorize(Roles = "Admin")]
         public async Task<ActionResult> EditMonarch(EditMonarchRequestDto editedMonarchDto)
         {
             return Ok(await _monarchServices.EditMonarch(editedMonarchDto));
         }
 
-        [HttpDelete]
+        [HttpDelete, Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteMonarch(int id)
         {
             if(await _monarchServices.RemoveMonarch(id))
