@@ -8,7 +8,7 @@ namespace MonarchsAPI_Net6.Services.AdminServices
         Task<bool> RegisterAdmin(AdminLoginRequest requestDto);
         Task<AdminLoginResponse> LoginAdmin(AdminLoginRequest requestDto);
         Task<bool> DeleteAdmin(int id);
-        Task<List<Admin>> GetAllAdmins();
-        Task<Admin> GetAdminById(int id);
+        Task<List<AdminGetResponseDto>> GetAllAdmins();
+        Task<AdminGetResponseDto> GetAdminById(int id);
     }
 }

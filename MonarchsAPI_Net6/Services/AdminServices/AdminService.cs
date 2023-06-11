@@ -76,12 +76,17 @@ namespace MonarchsAPI_Net6.Services.AdminServices
             return false;
         }
 
-        public async Task<List<Admin>> GetAllAdmins()
+        public async Task<List<AdminGetResponseDto>> GetAllAdmins()
         {
             try
             {
                 List<Admin> admins = await _dbContext.Admins.ToListAsync();
-                return admins;
+                List<AdminGetResponseDto> responseDtos = new();
+                foreach (Admin admin in admins)
+                {
+                    responseDtos.Add(new AdminGetResponseDto() { Id = admin.Id, Username = admin.Username});
+                }
+                return responseDtos;
             }
             catch (Exception ex)
             {
@@ -90,11 +95,16 @@ namespace MonarchsAPI_Net6.Services.AdminServices
             }
         }
 
-        public async Task<Admin> GetAdminById(int id)
+        public async Task<AdminGetResponseDto> GetAdminById(int id)
         {
             try
             {
-                return await FindById(id);
+                Admin? admin = await FindById(id);
+                if(admin == null)
+                {
+                    return null;
+                }
+                return new AdminGetResponseDto() { Id = admin.Id, Username= admin.Username };
             }
             catch (Exception ex)
             {
