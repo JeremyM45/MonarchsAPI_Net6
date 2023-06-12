@@ -9,8 +9,10 @@ namespace MonarchsAPI_Net6.Services.UserServices
         Task<List<User>> GetAllUsers();
         Task<User> GetUserById(int id);
         Task<bool> AddUser(CreateUserDto newUserDto);
-        Task<bool> EditUser(User user);
+        Task<UserEditResponseDto> EditUser(UserEditRequestDto userDto);
         Task<bool> DeleteUser(int id);
         Task<UserLoginResponseDto> LoginUser(UserLoginRequestDto loginDto);
+        Task<bool> VerifyUser(string name, string password);
+        Task<User> GetUserByName(string name);
     }
 }

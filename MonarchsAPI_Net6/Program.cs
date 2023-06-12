@@ -29,9 +29,8 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IRatingServices, RatingServices>();
 builder.Services.AddScoped<IMonarchServices, MonarchServices>();

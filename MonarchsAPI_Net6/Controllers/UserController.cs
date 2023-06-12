@@ -66,15 +66,20 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut, Authorize(Roles = "Admin")]
-        public async Task<ActionResult> EditUser(User user)
+        [HttpPut, Authorize(Roles = "User")]
+        public async Task<ActionResult> EditUser(UserEditRequestDto requestDto)
         {
-            if(await _userServices.EditUser(user))
+            if(await _userServices.VerifyUser(requestDto.Username, requestDto.Password))
             {
-                return Ok(await _userServices.GetUserById(user.Id));
+                UserEditResponseDto? responseDto = await _userServices.EditUser(requestDto);
+                if (responseDto != null)
+                {
+                    return Ok(responseDto);
+                }
+                return BadRequest();
             }
-
-            return BadRequest();
+            return Forbid();
+            
         }
     }
 }

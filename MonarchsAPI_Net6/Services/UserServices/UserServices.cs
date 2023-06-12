@@ -15,11 +15,13 @@ namespace MonarchsAPI_Net6.Services.UserServices
     {
         private readonly DataContext _dbContext;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserServices(DataContext context, IConfiguration configuration)
+        public UserServices(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _dbContext = context;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
         
         public async Task<List<User>> GetAllUsers()
@@ -32,6 +34,15 @@ namespace MonarchsAPI_Net6.Services.UserServices
             User? user = await _dbContext.Users.FindAsync(id);
             if (user == null) { return null; }
             return user;
+        }
+        public async Task<User> GetUserByName(string name)
+        {
+            User? foundUser = await _dbContext.Users.Where(u => u.UserName == name).FirstOrDefaultAsync();
+            if(foundUser == null)
+            {
+                return null;
+            }
+            return foundUser;
         }
 
         public async Task<bool> AddUser(CreateUserDto newUserDto)
@@ -69,16 +80,38 @@ namespace MonarchsAPI_Net6.Services.UserServices
             return true;
         }
 
-        public async Task<bool> EditUser(User user)
+        public async Task<UserEditResponseDto> EditUser(UserEditRequestDto requestDto)
         {
-            User? userToEdit = await _dbContext.Users.FindAsync(user.Id);
-            if (userToEdit == null) { return false; }
+            User? userToEdit = await _dbContext.Users.Where(u => u.UserName == requestDto.Username).FirstOrDefaultAsync();
+            if (userToEdit == null) { return null; }
             
-            userToEdit.UserName = user.UserName;
-            userToEdit.UserEmail = user.UserEmail;
-
+            userToEdit.UserName = requestDto.NewUsername;
+            userToEdit.UserEmail = requestDto.NewEmail;
+            CreatePasswordHash(requestDto.NewPassword, out byte[] newHash, out byte[] newSalt);
+            userToEdit.PasswordHash = newHash;
+            userToEdit.PasswordSalt = newSalt;
             await _dbContext.SaveChangesAsync();
-            return true;
+
+            UserEditResponseDto responseDto = new()
+            {
+                Username = userToEdit.UserName,
+                Email = userToEdit.UserEmail,
+                Token = GenerateToken(userToEdit.UserName)
+            };
+            return responseDto;
+        }
+        public async Task<bool> VerifyUser(string name, string password)
+        {
+            if(_httpContextAccessor != null)
+            {
+                string? userName = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
+                User? foundUser = await _dbContext.Users.Where(u => u.UserName == name).FirstOrDefaultAsync();
+                if (foundUser != null && userName != null) 
+                {
+                    return (userName == name) && VerifyPassword(password, foundUser.PasswordHash, foundUser.PasswordSalt);
+                }
+            }
+            return false;
         }
 
         public async Task<UserLoginResponseDto> LoginUser(UserLoginRequestDto loginDto)
@@ -90,8 +123,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
                 {
                     Id = foundUser.Id,
                     UserName = foundUser.UserName,
-                    UserEmail = foundUser.UserEmail,
-                    Token = GenerateToken(loginDto),
+                    Token = GenerateToken(loginDto.UserName),
                     Ratings = foundUser.Ratings
                 };
                 return responseDto;
@@ -115,11 +147,11 @@ namespace MonarchsAPI_Net6.Services.UserServices
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
-        private string GenerateToken(UserLoginRequestDto userDto)
+        private string GenerateToken(string username)
         {
             List<Claim> claims = new()
             {
-                new Claim(ClaimTypes.Name, userDto.UserName),
+                new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, "User")
             };
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
