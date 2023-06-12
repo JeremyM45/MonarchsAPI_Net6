@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MonarchsAPI_Net6.Data;
@@ -16,24 +17,30 @@ namespace MonarchsAPI_Net6.Services.UserServices
         private readonly DataContext _dbContext;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
 
-        public UserServices(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public UserServices(DataContext context, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
             _dbContext = context;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
         }
         
-        public async Task<List<User>> GetAllUsers()
+        public async Task<List<UserGetResponseDto>> GetAllUsers()
         {
-            return await _dbContext.Users.Include(u => u.Ratings).ToListAsync();
+            List<User> users = await _dbContext.Users.Include(u => u.Ratings).ToListAsync();
+            List<UserGetResponseDto> userDtos = users.Select(u => _mapper.Map<UserGetResponseDto>(u)).ToList();
+            
+            return userDtos;
         }
 
-        public async Task<User> GetUserById(int id)
+        public async Task<UserGetResponseDto> GetUserById(int id)
         {
             User? user = await _dbContext.Users.FindAsync(id);
             if (user == null) { return null; }
-            return user;
+            UserGetResponseDto userDto = _mapper.Map<UserGetResponseDto>(user);
+            return userDto;
         }
         public async Task<User> GetUserByName(string name)
         {

@@ -22,17 +22,17 @@ namespace MonarchsAPI_Net6.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetAll()
+        public async Task<ActionResult<List<UserGetResponseDto>>> GetAll()
         {
-            List<User> users = await _userServices.GetAllUsers();
-            if(users == null) { return NotFound(); }
+            List<UserGetResponseDto> users = await _userServices.GetAllUsers();
+            if (users == null) { return NotFound(); }
             return Ok(users);
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<User>> GetUserById(int id)
         {
-            User user = await _userServices.GetUserById(id);
+            UserGetResponseDto user = await _userServices.GetUserById(id);
             if(user == null) { return NotFound(); }
             return Ok(user);
         }

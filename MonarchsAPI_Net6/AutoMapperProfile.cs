@@ -2,6 +2,8 @@
 using MonarchsAPI_Net6.DTOs.CountryDtos;
 using MonarchsAPI_Net6.DTOs.DyanstyDtos;
 using MonarchsAPI_Net6.DTOs.MonarchsDtos;
+using MonarchsAPI_Net6.DTOs.RatingDtos;
+using MonarchsAPI_Net6.DTOs.UserDtos;
 using MonarchsAPI_Net6.Models;
 
 namespace MonarchsAPI_Net6
@@ -20,7 +22,8 @@ namespace MonarchsAPI_Net6
             CreateMap<CreateMonarchRequestDto, Monarch>();
             CreateMap<Monarch, MonarchResponseDashboardDto>();
             CreateMap<Monarch, MonarchMinDto>();
-            
+            CreateMap<User, UserGetResponseDto>();
+            CreateMap<Rating, RatingGetResponseDto>();
 
         }
     }

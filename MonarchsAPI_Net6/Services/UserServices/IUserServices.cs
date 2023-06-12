@@ -6,8 +6,8 @@ namespace MonarchsAPI_Net6.Services.UserServices
 {
     public interface IUserServices
     {
-        Task<List<User>> GetAllUsers();
-        Task<User> GetUserById(int id);
+        Task<List<UserGetResponseDto>> GetAllUsers();
+        Task<UserGetResponseDto> GetUserById(int id);
         Task<bool> AddUser(CreateUserDto newUserDto);
         Task<UserEditResponseDto> EditUser(UserEditRequestDto userDto);
         Task<bool> DeleteUser(int id);
