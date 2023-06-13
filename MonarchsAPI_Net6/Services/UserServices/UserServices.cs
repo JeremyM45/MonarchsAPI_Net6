@@ -87,7 +87,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
             return true;
         }
 
-        public async Task<UserEditResponseDto> EditUser(UserEditRequestDto requestDto)
+        public async Task<UserLoginResponseDto> EditUser(UserEditRequestDto requestDto)
         {
             User? userToEdit = await _dbContext.Users.Where(u => u.UserName == requestDto.Username).FirstOrDefaultAsync();
             if (userToEdit == null) { return null; }
@@ -99,11 +99,12 @@ namespace MonarchsAPI_Net6.Services.UserServices
             userToEdit.PasswordSalt = newSalt;
             await _dbContext.SaveChangesAsync();
 
-            UserEditResponseDto responseDto = new()
+            UserLoginResponseDto responseDto = new()
             {
-                Username = userToEdit.UserName,
-                Email = userToEdit.UserEmail,
-                Token = GenerateToken(userToEdit.UserName)
+                Id = userToEdit.Id,
+                UserName = userToEdit.UserName,
+                Token = GenerateToken(userToEdit.UserName),
+                Ratings = userToEdit.Ratings
             };
             return responseDto;
         }

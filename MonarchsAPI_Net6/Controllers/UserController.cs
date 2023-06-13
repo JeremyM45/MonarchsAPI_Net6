@@ -71,7 +71,7 @@ namespace MonarchsAPI_Net6.Controllers
         {
             if(await _userServices.VerifyUser(requestDto.Username, requestDto.Password))
             {
-                UserEditResponseDto? responseDto = await _userServices.EditUser(requestDto);
+                UserLoginResponseDto? responseDto = await _userServices.EditUser(requestDto);
                 if (responseDto != null)
                 {
                     return Ok(responseDto);
