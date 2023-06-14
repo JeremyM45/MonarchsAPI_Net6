@@ -99,7 +99,11 @@ namespace MonarchsAPI_Net6.Services.RatingServices
                     {
                         _dbContext.Remove(rating);
                         await _dbContext.SaveChangesAsync();
-                        return true;
+                        Monarch? monarch = await _dbContext.Monarchs.Include(m => m.Ratings).Where(m => m.Id == rating.MonarchId).FirstOrDefaultAsync();
+                        if (monarch != null && await UpdateAverageRatingValue(monarch))
+                        {
+                            return true;
+                        }
                     }
                 }
                 return false;
@@ -128,7 +132,13 @@ namespace MonarchsAPI_Net6.Services.RatingServices
                 Monarch? monarchToUpdate = await _dbContext.Monarchs.FindAsync(monarch.Id);
                 if(monarchToUpdate != null)
                 {
-                    monarchToUpdate.AverageRating = totalRatingsValue / numOfAllMRatings;
+                    if(numOfAllMRatings == 0 || totalRatingsValue == 0)
+                    {
+                        monarchToUpdate.AverageRating = 0;
+                    } else
+                    {
+                        monarchToUpdate.AverageRating = totalRatingsValue / numOfAllMRatings;
+                    }
                     await _dbContext.SaveChangesAsync();
                     return true;
                 }
