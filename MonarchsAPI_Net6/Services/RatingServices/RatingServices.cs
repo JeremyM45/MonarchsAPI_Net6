@@ -5,15 +5,19 @@ using MonarchsAPI_Net6.Data;
 using MonarchsAPI_Net6.DTOs.RatingDtos;
 using MonarchsAPI_Net6.Models;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 
 namespace MonarchsAPI_Net6.Services.RatingServices
 {
     public class RatingServices : IRatingServices
     {
         private readonly DataContext _dbContext;
-        public RatingServices(DataContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public RatingServices(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _dbContext = context;               
+            _dbContext = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<Rating>> GetAll()
@@ -58,22 +62,26 @@ namespace MonarchsAPI_Net6.Services.RatingServices
             Rating? ratingToEdit = await _dbContext.Ratings.Where(r => r.Id == ratingDto.Id).FirstOrDefaultAsync();
             if(ratingToEdit != null) 
             {
-                ratingToEdit.RatingValue = ratingDto.RatingValue;
-                ratingToEdit.Comment = ratingDto.Comment;
-                Monarch? monarch = await _dbContext.Monarchs.Include(m => m.Ratings).Where(m => m.Id == ratingToEdit.MonarchId).FirstOrDefaultAsync();
-                if(monarch != null)
+                User? ratingsUser = await _dbContext.Users.FindAsync(ratingToEdit.UserId);
+                if (ratingsUser != null && ratingsUser.UserName == _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name))
                 {
-                    try
+                    ratingToEdit.RatingValue = ratingDto.RatingValue;
+                    ratingToEdit.Comment = ratingDto.Comment;
+                    Monarch? monarch = await _dbContext.Monarchs.Include(m => m.Ratings).Where(m => m.Id == ratingToEdit.MonarchId).FirstOrDefaultAsync();
+                    if (monarch != null)
                     {
-                        await _dbContext.SaveChangesAsync();
-                        if (await UpdateAverageRatingValue(monarch))
+                        try
                         {
-                            return true;
+                            await _dbContext.SaveChangesAsync();
+                            if (await UpdateAverageRatingValue(monarch))
+                            {
+                                return true;
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
+                        catch (Exception ex)
+                        {
+                            throw ex;
+                        }
                     }
                 }
             }

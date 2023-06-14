@@ -59,7 +59,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut, Authorize(Roles = "Admin")]
+        [HttpPut, Authorize(Roles = "User")]
         public async Task<ActionResult> EditRating(EditRatingDto ratingDto)
         {
             if (await _ratingServices.EditRating(ratingDto))
