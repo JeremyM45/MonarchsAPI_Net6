@@ -32,7 +32,7 @@ namespace MonarchsAPI_Net6.Controllers
             return Ok(ratings);
         }
 
-        [HttpPost, Authorize(Roles = "User")]
+        [HttpPost, Authorize(Roles = "User, Admin")]
         public async Task<ActionResult<Rating>> AddRating(CreateRatingDto ratingDto)
         {
             Rating newRating = new Rating
@@ -49,7 +49,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpDelete, Authorize(Roles = "User")]
+        [HttpDelete, Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> DeleteRating(int id)
         {
             if (await _ratingServices.DeleteRating(id))
@@ -59,7 +59,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut, Authorize(Roles = "User")]
+        [HttpPut, Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> EditRating(EditRatingDto ratingDto)
         {
             if (await _ratingServices.EditRating(ratingDto))

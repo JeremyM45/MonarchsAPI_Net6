@@ -66,7 +66,7 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();
         }
 
-        [HttpPut, Authorize(Roles = "User")]
+        [HttpPut, Authorize(Roles = "User, Admin")]
         public async Task<ActionResult> EditUser(UserEditRequestDto requestDto)
         {
             if(await _userServices.VerifyUser(requestDto.Username, requestDto.Password))
