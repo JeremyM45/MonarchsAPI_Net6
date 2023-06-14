@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MonarchsAPI_Net6.Data;
 using MonarchsAPI_Net6.DTOs.RatingDtos;
 using MonarchsAPI_Net6.Models;

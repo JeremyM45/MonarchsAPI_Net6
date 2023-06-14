@@ -10,6 +10,7 @@ namespace MonarchsAPI_Net6.DTOs.MonarchsDtos
         public string WikiLink { get; set; } = string.Empty;
         public string Reign { get; set; } = string.Empty;
         public int DynastyId { get; set; } = new int();
+        public string AverageRating { get; set; } = string.Empty;
         public List<int> CountryIds { get; set; } = new List<int>();
     }
 }

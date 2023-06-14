@@ -24,6 +24,7 @@ namespace MonarchsAPI_Net6
             CreateMap<Monarch, MonarchMinDto>();
             CreateMap<User, UserGetResponseDto>();
             CreateMap<Rating, RatingGetResponseDto>();
+            CreateMap<Monarch, MonarchGetDto>();
             
         }
     }
