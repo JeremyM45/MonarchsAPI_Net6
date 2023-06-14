@@ -35,7 +35,7 @@ namespace MonarchsAPI_Net6.Services.RatingServices
         {
             User? user = await _dbContext.Users.FindAsync(rating.UserId);
             Monarch? monarch = await _dbContext.Monarchs.Include(m => m.Ratings).Where(m => m.Id == rating.MonarchId).FirstOrDefaultAsync();
-            if(user != null && monarch != null)
+            if(user != null && monarch != null && VerifyJwT(user.UserName))
             {
                 rating.Monarch = monarch;
                 rating.User = user;
@@ -63,7 +63,7 @@ namespace MonarchsAPI_Net6.Services.RatingServices
             if(ratingToEdit != null) 
             {
                 User? ratingsUser = await _dbContext.Users.FindAsync(ratingToEdit.UserId);
-                if (ratingsUser != null && ratingsUser.UserName == _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name))
+                if (ratingsUser != null && VerifyJwT(ratingsUser.UserName))
                 {
                     ratingToEdit.RatingValue = ratingDto.RatingValue;
                     ratingToEdit.Comment = ratingDto.Comment;
@@ -93,15 +93,27 @@ namespace MonarchsAPI_Net6.Services.RatingServices
             Rating? rating = await _dbContext.Ratings.Where(r => r.Id == id).FirstOrDefaultAsync();
             try 
             {
-                if(rating != null) _dbContext.Remove(rating);
-                await _dbContext.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-
+                if (rating != null) { 
+                    User? user = await _dbContext.Users.FindAsync(rating.UserId);
+                    if (user != null && VerifyJwT(user.UserName))
+                    {
+                        _dbContext.Remove(rating);
+                        await _dbContext.SaveChangesAsync();
+                        return true;
+                    }
+                }
                 return false;
             }
+            catch(Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public bool VerifyJwT(string username)
+        {
+            return username == _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
         }
         private async Task<bool> UpdateAverageRatingValue(Monarch monarch)
         {
@@ -116,9 +128,6 @@ namespace MonarchsAPI_Net6.Services.RatingServices
                 Monarch? monarchToUpdate = await _dbContext.Monarchs.FindAsync(monarch.Id);
                 if(monarchToUpdate != null)
                 {
-                    Console.WriteLine("numOfAllRatings: " + numOfAllMRatings);
-                    Console.WriteLine("totalRatingsVaule: " + totalRatingsValue);
-                    Console.WriteLine("AverageRating: " + totalRatingsValue / numOfAllMRatings);
                     monarchToUpdate.AverageRating = totalRatingsValue / numOfAllMRatings;
                     await _dbContext.SaveChangesAsync();
                     return true;
