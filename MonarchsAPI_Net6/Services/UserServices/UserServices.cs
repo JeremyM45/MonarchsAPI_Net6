@@ -75,48 +75,50 @@ namespace MonarchsAPI_Net6.Services.UserServices
             }
         }
 
-        public async Task<bool> DeleteUser(int id)
+        public async Task<bool> DeleteUser(UserDeleteRequestDto requestDto)
         {
-            User? userToRemove = await _dbContext.Users.FindAsync(id);
-            if(userToRemove == null)
+            User? userToRemove = await _dbContext.Users.FindAsync(requestDto.Id);
+            if(userToRemove != null && (await VerifyUser(userToRemove.UserName, requestDto.Password) || IsAdmin()))
             {
-                return false;
+                _dbContext.Users.Remove(userToRemove);
+                await _dbContext.SaveChangesAsync();
+                return true;
             }
-            _dbContext.Users.Remove(userToRemove);
-            await _dbContext.SaveChangesAsync();
-            return true;
+            return false;
         }
 
         public async Task<UserLoginResponseDto> EditUser(UserEditRequestDto requestDto)
         {
             User? userToEdit = await _dbContext.Users.Where(u => u.UserName == requestDto.Username).FirstOrDefaultAsync();
-            if (userToEdit == null) { return null; }
-            
-            userToEdit.UserName = requestDto.NewUsername;
-            userToEdit.UserEmail = requestDto.NewEmail;
-            CreatePasswordHash(requestDto.NewPassword, out byte[] newHash, out byte[] newSalt);
-            userToEdit.PasswordHash = newHash;
-            userToEdit.PasswordSalt = newSalt;
-            await _dbContext.SaveChangesAsync();
-
-            UserLoginResponseDto responseDto = new()
+            if (userToEdit != null && await VerifyUser(userToEdit.UserName, requestDto.Password)) 
             {
-                Id = userToEdit.Id,
-                UserName = userToEdit.UserName,
-                Token = GenerateToken(userToEdit.UserName),
-                Ratings = userToEdit.Ratings
-            };
-            return responseDto;
+                userToEdit.UserName = requestDto.NewUsername;
+                userToEdit.UserEmail = requestDto.NewEmail;
+                CreatePasswordHash(requestDto.NewPassword, out byte[] newHash, out byte[] newSalt);
+                userToEdit.PasswordHash = newHash;
+                userToEdit.PasswordSalt = newSalt;
+                await _dbContext.SaveChangesAsync();
+
+                UserLoginResponseDto responseDto = new()
+                {
+                    Id = userToEdit.Id,
+                    UserName = userToEdit.UserName,
+                    Token = GenerateToken(userToEdit.UserName),
+                    Ratings = userToEdit.Ratings
+                };
+                return responseDto;
+            }
+            return null;
+            
         }
         public async Task<bool> VerifyUser(string name, string password)
         {
             if(_httpContextAccessor != null)
             {
-                string? userName = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
                 User? foundUser = await _dbContext.Users.Where(u => u.UserName == name).FirstOrDefaultAsync();
-                if (foundUser != null && userName != null) 
+                if (foundUser != null) 
                 {
-                    return (userName == name) && VerifyPassword(password, foundUser.PasswordHash, foundUser.PasswordSalt);
+                    return VerifyJwt(name) && VerifyPassword(password, foundUser.PasswordHash, foundUser.PasswordSalt);
                 }
             }
             return false;
@@ -137,6 +139,15 @@ namespace MonarchsAPI_Net6.Services.UserServices
                 return responseDto;
             }
             return null;
+        }
+
+        private bool VerifyJwt(string username)
+        {
+            return username == _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
+        }
+        private bool IsAdmin()
+        {
+            return _httpContextAccessor.HttpContext.User.IsInRole("Admin");
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

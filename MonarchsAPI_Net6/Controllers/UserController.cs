@@ -56,10 +56,10 @@ namespace MonarchsAPI_Net6.Controllers
             return BadRequest();   
         }
 
-        [HttpDelete, Authorize(Roles = "Admin")]
-        public async Task<ActionResult> DeleteUser(int id)
+        [HttpDelete, Authorize(Roles = "User, Admin")]
+        public async Task<ActionResult> DeleteUser(UserDeleteRequestDto requestDto)
         {
-            if(await _userServices.DeleteUser(id))
+            if(await _userServices.DeleteUser(requestDto))
             {
                 return NoContent();
             }
