@@ -140,6 +140,16 @@ namespace MonarchsAPI_Net6.Services.UserServices
             }
             return null;
         }
+        public async Task<bool> UsernameExsits(string name)
+        {
+            User? foundUser = await GetUserByName(name);
+            if(foundUser == null)
+            {
+                return false;
+            }
+            return true;
+
+        }
 
         private bool VerifyJwt(string username)
         {
@@ -183,5 +193,6 @@ namespace MonarchsAPI_Net6.Services.UserServices
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
             return jwt;
         }
+
     }
 }

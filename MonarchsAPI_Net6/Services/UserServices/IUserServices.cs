@@ -14,5 +14,6 @@ namespace MonarchsAPI_Net6.Services.UserServices
         Task<UserLoginResponseDto> LoginUser(UserLoginRequestDto requestDto);
         Task<bool> VerifyUser(string name, string password);
         Task<User> GetUserByName(string name);
+        Task<bool> UsernameExsits(string name);
     }
 }
