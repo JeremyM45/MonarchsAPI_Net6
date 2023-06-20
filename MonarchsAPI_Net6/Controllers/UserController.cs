@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -74,6 +75,10 @@ namespace MonarchsAPI_Net6.Controllers
         {
             if(await _userServices.VerifyUser(requestDto.Username, requestDto.Password))
             {
+                if (await _userServices.UsernameExsits(requestDto.NewUsername))
+                {
+                    return BadRequest("Can't Change Username, Username Already Exsits");
+                }
                 UserLoginResponseDto? responseDto = await _userServices.EditUser(requestDto);
                 if (responseDto != null)
                 {
