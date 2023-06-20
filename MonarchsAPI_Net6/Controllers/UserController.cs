@@ -48,7 +48,10 @@ namespace MonarchsAPI_Net6.Controllers
         [HttpPost]
         public async Task<ActionResult> AddUser(CreateUserDto request)
         {
-            
+            if(await _userServices.UsernameExsits(request.UserName))
+            {
+                return BadRequest("Username Already Exsits");
+            }
             if(await _userServices.AddUser(request))
             {
                 return Ok();
