@@ -104,6 +104,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
                     Id = userToEdit.Id,
                     UserName = userToEdit.UserName,
                     Token = GenerateToken(userToEdit.UserName),
+                    Email = userToEdit.UserEmail
                 };
                 return responseDto;
             }
@@ -133,6 +134,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
                     Id = foundUser.Id,
                     UserName = foundUser.UserName,
                     Token = GenerateToken(loginDto.UserName),
+                    Email = foundUser.UserEmail
                 };
                 return responseDto;
             }

@@ -83,7 +83,7 @@ namespace MonarchsAPI_Net6.Controllers
         {
             if(await _userServices.VerifyUser(requestDto.Username, requestDto.Password))
             {
-                if (await _userServices.UsernameExsits(requestDto.NewUsername))
+                if (requestDto.NewUsername != requestDto.Username && await _userServices.UsernameExsits(requestDto.NewUsername))
                 {
                     return BadRequest("Can't Change Username, Username Already Exsits");
                 }
