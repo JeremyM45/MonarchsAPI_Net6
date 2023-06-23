@@ -41,8 +41,16 @@ namespace MonarchsAPI_Net6.Controllers
         [HttpGet("[action]")]
         public async Task<ActionResult<UserLoginResponseDto>> LoginUser([FromQuery] UserLoginRequestDto userLoginRequest)
         {
+            if(!await _userServices.UsernameExsits(userLoginRequest.UserName))
+            {
+                return NotFound("Username Does Not Exisit");
+            }
+            User? foundUser = await _userServices.GetUserByName(userLoginRequest.UserName);
+            if(!_userServices.VerifyPassword(userLoginRequest.Password, foundUser.PasswordHash, foundUser.PasswordSalt))
+            {
+                return BadRequest("Invalid Password");
+            }
             UserLoginResponseDto? user = await _userServices.LoginUser(userLoginRequest);
-            if (user == null) { return NotFound(); };
             return Ok(user);
         }
 

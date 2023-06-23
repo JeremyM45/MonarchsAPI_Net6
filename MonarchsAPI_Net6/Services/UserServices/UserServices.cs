@@ -104,7 +104,6 @@ namespace MonarchsAPI_Net6.Services.UserServices
                     Id = userToEdit.Id,
                     UserName = userToEdit.UserName,
                     Token = GenerateToken(userToEdit.UserName),
-                    Ratings = userToEdit.Ratings
                 };
                 return responseDto;
             }
@@ -127,14 +126,13 @@ namespace MonarchsAPI_Net6.Services.UserServices
         public async Task<UserLoginResponseDto> LoginUser(UserLoginRequestDto loginDto)
         {
             User? foundUser = await _dbContext.Users.Where(u => u.UserName == loginDto.UserName).FirstOrDefaultAsync();
-            if(foundUser != null && VerifyPassword(loginDto.Password, foundUser.PasswordHash, foundUser.PasswordSalt))
+            if(foundUser != null)
             {
                 UserLoginResponseDto responseDto = new()
                 {
                     Id = foundUser.Id,
                     UserName = foundUser.UserName,
                     Token = GenerateToken(loginDto.UserName),
-                    Ratings = foundUser.Ratings
                 };
                 return responseDto;
             }
@@ -168,7 +166,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
             }
         }
-        private bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
+        public bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
             {

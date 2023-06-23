@@ -13,6 +13,7 @@ namespace MonarchsAPI_Net6.Services.UserServices
         Task<bool> DeleteUser(UserDeleteRequestDto requestDto);
         Task<UserLoginResponseDto> LoginUser(UserLoginRequestDto requestDto);
         Task<bool> VerifyUser(string name, string password);
+        bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt);
         Task<User> GetUserByName(string name);
         Task<bool> UsernameExsits(string name);
     }
